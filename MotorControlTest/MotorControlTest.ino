@@ -1,11 +1,14 @@
-const int dirPin = 8;
-const int stepPin = 7;
+const int dirPin = 12;
+const int stepPin = 11;
 
 const int ledPin = 13;
+
+const int ms1Pin = 2;
 
 void setup() {
   pinMode(dirPin, OUTPUT);
   pinMode(stepPin, OUTPUT);
+  pinMode(ms1Pin, OUTPUT);
 
   pinMode(ledPin, OUTPUT);
 
@@ -13,18 +16,17 @@ void setup() {
     digitalWrite(ledPin, !digitalRead(ledPin));
     delay(500);
   }
-  
+
+  digitalWrite(ms1Pin, LOW);
   digitalWrite(dirPin, LOW);
 }
 
 void loop() {
-  for(int i = 3000; i >= 300; i--){
-    for(int k = 0; k <= 10; k++){
-      sendStep(i);
+    for(int k = 0; k <= 199; k++){
+      sendStep(800);
     }
-  }
   delay(1000);
-  digitalWrite(dirPin, !digitalRead(dirPin));
+  digitalWrite(ms1Pin, !digitalRead(ms1Pin));
 }
 
 void sendStep(int speedVal){
