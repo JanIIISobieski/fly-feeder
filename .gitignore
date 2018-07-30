@@ -3,3 +3,8 @@
 *.lck
 *.asv
 OldVersions/
+
+# Microsoft Visual Studio Code for Arduino
+*.vcxproj
+*.vcxproj.*
+__vm/
