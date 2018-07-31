@@ -6,7 +6,7 @@
 
 //MS pins on motor driver stepper
 const int ms1Pin = 2;	//doubles stepping (1 -> 2, or 4 -> 8)
-const int ms2Pin = 3;	//quadruples stepping (1 -> 4)
+const int ms2Pin = 3;	//quadruples stepping (1 -> 4, 2-> 8)
 const int ms3Pin = 11;	//doubles stepping (only from 8 -> 16)
 
 const int readMS1 = 8;
@@ -40,16 +40,34 @@ int stepErrorIter;
 
 float error = 0;
 
-int toStep;
-
 void setup() {
+	for (size_t i = 54; i <= 61; i++) {	//initialize IR pins
+		pinMode(i, INPUT);
+	}
+
+	pinMode(ms1Pin, OUTPUT);
+	pinMode(ms2Pin, OUTPUT);
+	pinMode(ms3Pin, OUTPUT);
+
+	pinMode(readMS1, INPUT);
+	pinMode(readMS2, INPUT);
+	pinMode(readMS3, INPUT);
+
+	pinMode(stepPin, OUTPUT);
+	pinMode(dirPin, OUTPUT);
+
+	pinMode(relayLogic1, OUTPUT);
+	pinMode(relayLogic2, OUTPUT);
+
 	stepsPerRot = findStepsPerRot(motor1BaseSteps);
 	stepsToNextFly = findStepsToNextFly(stepsPerRot, numFlyTubes);
 	stepErrorIter = findStepErrorIter(stepsToNextFly, stepsPerRot, numFlyTubes);
+
+	alignMotorWithIR();
 }
 
 void loop() {
-	error = stepMotor(toStep, 400, true, error);
+	error = stepMotor(stepsToNextFly, 400, true, error, true);
 	delay(1000);
 }
 
@@ -98,17 +116,31 @@ void chooseMotorDir(bool dir){
 	}
 }
 
-
-
-float stepMotor(int steps, int speedVal, bool dir, float err){
+float stepMotor(int steps, int speedVal, bool dir, float err, bool err_adjust){
 	chooseMotorDir(dir);
-	if (err > 1.0){
-		steps = steps + 1;
-		err = err - 1.0;
+	if (err_adjust){
+		if (err > 1.0){
+			steps = steps + 1;
+			err = err - 1.0;
+		}
 	}
+	else {
+		err = 0.0;
+	}
+	
 	for (size_t i = 0; i < steps; i++)
 	{
 		moveMotor(speedVal);
 	}
 	return err;
+}
+
+void alignMotorWithIR() {
+	int threshold = 200;
+	int readIRalign = digitalRead(align_IR);
+	while (readIRalign < threshold)
+	{
+		stepMotor(1, 300, true, 0.0, false);
+		readIRalign = digitalRead(align_IR);
+	}
 }

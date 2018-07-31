@@ -7,4 +7,5 @@ OldVersions/
 # Microsoft Visual Studio Code for Arduino
 *.vcxproj
 *.vcxproj.*
+*.suo
 __vm/
