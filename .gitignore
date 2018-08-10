@@ -9,3 +9,4 @@ OldVersions/
 *.vcxproj.*
 *.suo
 __vm/
+Debug/
