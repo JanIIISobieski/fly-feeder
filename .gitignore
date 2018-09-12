@@ -3,6 +3,7 @@
 *.lck
 *.asv
 OldVersions/
+AutomatedFlyFeeder/
 
 # Microsoft Visual Studio Code for Arduino
 *.vcxproj
