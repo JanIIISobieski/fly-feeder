@@ -5,6 +5,18 @@
 OldVersions/
 AutomatedFlyFeeder/
 
+# LaTeX files
+*.aux
+*.log
+*.out
+*.pdf
+*.gz
+
+# Schematic files
+*.ai
+*.svg
+*.qet
+
 # Microsoft Visual Studio Code for Arduino
 *.vcxproj
 *.vcxproj.*

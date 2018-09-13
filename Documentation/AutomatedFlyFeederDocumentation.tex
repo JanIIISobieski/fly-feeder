@@ -1,0 +1,86 @@
+\documentclass[12pt]{article}
+
+\usepackage[top=0.7in, left=0.7in, right=0.7in, bottom=0.7in]{geometry}
+\usepackage{amsmath, amssymb, gensymb, mathtools}
+\usepackage{graphicx}
+\usepackage[font=footnotesize, labelfont=bf]{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{epstopdf}
+\usepackage{appendix}
+\usepackage{wrapfig}
+\usepackage{paralist}
+\usepackage{enumitem}
+\usepackage{cancel}
+\usepackage[english]{babel, fancyref}
+\usepackage{hyperref}
+\usepackage{xfrac}
+\usepackage{lscape}
+\usepackage{longtable}
+\usepackage{relsize}
+\usepackage{fancyhdr}
+\usepackage{blindtext}
+\usepackage{pdfpages}
+\usepackage[utf8]{inputenc}
+\usepackage{cite}
+\bibliographystyle{abbrv}
+
+\lhead{}
+\chead{}
+\rhead{}
+
+\pagestyle{plain}
+
+% Allow for line breaking in tables
+\newcolumntype{L}[1]{>{\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}					% jusitified column
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}		% centered column
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}		% right-aligned column
+
+\floatstyle{plaintop}
+\restylefloat{table}
+
+
+\newcommand{\divider}{\vspace*{-4mm} \rule{\linewidth}{1pt} \vspace{-4pt} }
+
+\fancyrefchangeprefix{\fancyreftablabelprefix}{tbl}
+\fancyrefchangeprefix{\fancyrefeqlabelprefix}{eqn}
+
+\title{Automated Fly Feeder Documentation}
+\author{Gabriel Antoniak}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+\divider
+
+\section{Equipment List}
+\renewcommand{\arraystretch}{1.2}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{| r | c |} \toprule
+		\textbf{Item}  & \textbf{Amount} \\ \cline{1-2}
+		\href{https://store.arduino.cc/usa/arduino-mega-2560-rev3}{Arduino Mega}   &  1\\
+		\href{https://www.sparkfun.com/products/9806}{10K Trimpot}    &  1\\
+		\href{https://www.sparkfun.com/products/241}{IR Emitter}     &  9\\
+		\href{https://www.sparkfun.com/products/241}{IR Sensor}      &  2\\
+		\href{https://www.sparkfun.com/products/8982}{1 mF Capacitor} &  1\\
+		\href{https://www.sparkfun.com/products/14490}{330 $\Omega$ Resistor} &  9\\ 
+		\href{https://www.sparkfun.com/products/14491}{10 k$\Omega$ Resistor} &  2\\
+		\href{https://www.sparkfun.com/products/10811}{Barrel adapter} &  1\\
+		\href{https://www.pololu.com/product/2128}{A4988 Stepped Motor Driver} &  1\\
+		\href{https://www.pololu.com/product/1200}{Stepper Motor 1.2 A, 200 steps} & 1\\
+		\href{https://www.sparkfun.com/products/9456}{LM358N Op-Amp} & 1\\
+		\href{https://www.sparkfun.com/products/13815}{10 Amp Relay}  & 2\\ \bottomrule
+	\end{tabular}
+	\caption{Necessary equipment and respective links to the product}
+	\label{tbl:equipment}
+\end{table}
+
+For specific information regarding individual components, see the specification sheet in \texttt{SpecSheets/} folder in the same directory as this .pdf.
+
+\end{document}
