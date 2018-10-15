@@ -26,3 +26,6 @@ Debug/
 
 # Images
 *.png
+
+# PCB Design Files
+PCBDesigns/*

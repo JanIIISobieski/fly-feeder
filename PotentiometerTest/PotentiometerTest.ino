@@ -1,5 +1,5 @@
-const int potentPin = A1;
-const int irPin = A0;
+const int potentPin = A0;
+const int irPin = A1;
 const int ledPin = 13;
 
 void setup() {

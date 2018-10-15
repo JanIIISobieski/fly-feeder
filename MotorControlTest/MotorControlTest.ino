@@ -1,37 +1,22 @@
-const int dirPin = 12;
-const int stepPin = 11;
+#include <Arduino.h>
+#include "A4988.h"
 
-const int ledPin = 13;
+#define MOTOR_STEPS 200
+#define DIR 4
+#define STEP 5
+#define MS1 11
+#define MS2 10
+#define MS3 9
 
-const int ms1Pin = 2;
+#define MICROSTEPS 1
+
+A4988 stepper(MOTOR_STEPS, DIR, STEP);
 
 void setup() {
-  pinMode(dirPin, OUTPUT);
-  pinMode(stepPin, OUTPUT);
-  pinMode(ms1Pin, OUTPUT);
-
-  pinMode(ledPin, OUTPUT);
-
-  for(int i = 0; i <= 5; i++){
-    digitalWrite(ledPin, !digitalRead(ledPin));
-    delay(500);
-  }
-
-  digitalWrite(ms1Pin, LOW);
-  digitalWrite(dirPin, LOW);
+  stepper.begin(10, MICROSTEPS);
 }
 
 void loop() {
-    for(int k = 0; k <= 199; k++){
-      sendStep(800);
-    }
+  stepper.rotate(360);
   delay(1000);
-  digitalWrite(ms1Pin, !digitalRead(ms1Pin));
-}
-
-void sendStep(int speedVal){
-  digitalWrite(stepPin, HIGH);
-  delayMicroseconds(speedVal);
-  digitalWrite(stepPin, LOW);
-  delayMicroseconds(speedVal);
 }

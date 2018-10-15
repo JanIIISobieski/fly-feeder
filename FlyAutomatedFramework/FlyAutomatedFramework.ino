@@ -5,76 +5,67 @@
 */
 
 //MS pins on motor driver stepper
-const int ms1Pin = 2;	//doubles stepping (1 -> 2, or 4 -> 8)
-const int ms2Pin = 3;	//quadruples stepping (1 -> 4, 2-> 8)
-const int ms3Pin = 11;	//doubles stepping (only from 8 -> 16)
+const int ms1 = 9;	//doubles stepping (1 -> 2, or 4 -> 8)
+const int ms2 = 10;	//quadruples stepping (1 -> 4, 2-> 8)
+const int ms3 = 11;	//doubles stepping (only from 8 -> 16)
 
-const int readMS1 = 8;
-const int readMS2 = 9;
-const int readMS3 = 10;
-
-const int stepPin = 4;	//send pulse to move motor
-const int dirPin = 5;	//set to high or low to change direction
+const int stepPin = 5;	//send pulse to move motor
+const int dirPin = 4;	//set to high or low to change direction
 
 const int relayLogic1 = 6;	//activate relay 1
 const int relayLogic2 = 7;	//activate relay 2
 
-const int can_fr_top_IR = A0;
-const int can_fr_bot_IR = A1;
-const int can_bk_top_IR = A2;
-const int can_bk_bot_IR = A3;
+const int align_IR = A0;
+const int fly_IR = A1;
 
-const int con_fr_top_IR = A4;
-const int con_fr_bot_IR = A5;
-const int con_bk_top_IR = A6;
-const int con_bk_bot_IR = A7;
-
-const int align_IR = A8;
+const int align_digital = 2;
+const int fly_digital = 3;
+volatile int spin_motor = 1;
 
 int motor1BaseSteps = 400;
-int numFlyTubes = 6;
+int numFlyTubes = 8;
 
 int stepsPerRot;
 int stepsToNextFly;
-int stepErrorIter;
 
-float error = 0;
+char aligned[] = "Cartridge aligned";
+char fly_passed[] = "Fly passed";
 
 void setup() {
-	for (size_t i = 54; i <= 61; i++) {	//initialize IR pins
-		pinMode(i, INPUT);
-	}
+	Serial.begin(9600);
 
-	pinMode(ms1Pin, OUTPUT);
-	pinMode(ms2Pin, OUTPUT);
-	pinMode(ms3Pin, OUTPUT);
+	//pinMode(ms1, OUTPUT);
+	//pinMode(ms2, OUTPUT);
+	//pinMode(ms3, OUTPUT);
 
-	pinMode(readMS1, INPUT);
-	pinMode(readMS2, INPUT);
-	pinMode(readMS3, INPUT);
+	//digitalWrite(ms1, LOW);
+	//digitalWrite(ms2, LOW);
+	//digitalWrite(ms3, LOW);
 
 	pinMode(stepPin, OUTPUT);
 	pinMode(dirPin, OUTPUT);
 
+	digitalWrite(stepPin, LOW);
+	digitalWrite(dirPin, LOW);
+
 	pinMode(relayLogic1, OUTPUT);
 	pinMode(relayLogic2, OUTPUT);
 
-	stepsPerRot = findStepsPerRot(motor1BaseSteps);
+	//stepsPerRot = findStepsPerRot(motor1BaseSteps);
+	stepsPerRot = 400;
 	stepsToNextFly = findStepsToNextFly(stepsPerRot, numFlyTubes);
-	stepErrorIter = findStepErrorIter(stepsToNextFly, stepsPerRot, numFlyTubes);
 
-	alignMotorWithIR();
+	attachInterrupt(digitalPinToInterrupt(align_digital), changeSpinState, FALLING);
+
+	delay(5000);
+
+	int steps_needed = alignMotorWithIR();
+	Serial.println(steps_needed);
 }
 
 void loop() {
-	error = stepMotor(stepsToNextFly, 400, true, error, true);
-	delay(1000);
-}
-
-float findStepErrorIter(int stepsNext, int stepsRot, int numFlies){
-	int errorPerFullRot = stepsRot - numFlies*stepsNext;
-	float errorIter = ((float) errorPerFullRot) / numFlies;
-	return errorIter;
+	digitalWrite(LED_BUILTIN, !digitalRead(!LED_BUILTIN));
+	delay(500);
 }
 
 int findStepsToNextFly(int stepsPerRot, int numFlyTubes){
@@ -84,23 +75,23 @@ int findStepsToNextFly(int stepsPerRot, int numFlyTubes){
 }
 
 int findStepsPerRot(int baseSteps){
-	if (digitalRead(readMS1) == 1)
+	if (digitalRead(ms1) == HIGH)
 	{
 		baseSteps = baseSteps * 2;
 	}
 
-	if (digitalRead(readMS2) == 1){
-		baseSteps = baseSteps * 2;
+	if (digitalRead(ms2) == HIGH){
+		baseSteps = baseSteps * 4;
 	}
 
-	if (digitalRead(readMS3) == 1){
+	if (digitalRead(ms3) == HIGH){
 		baseSteps = baseSteps * 2;
 	}
 
 	return baseSteps;
 }
 
-void moveMotor(int speedVal){
+void stepMotor(int speedVal){
 	digitalWrite(stepPin, HIGH);
 	delayMicroseconds(speedVal);
 	digitalWrite(stepPin, LOW);
@@ -116,31 +107,41 @@ void chooseMotorDir(bool dir){
 	}
 }
 
-float stepMotor(int steps, int speedVal, bool dir, float err, bool err_adjust){
+void moveMotor(int steps, int speedVal, bool dir){
 	chooseMotorDir(dir);
-	if (err_adjust){
-		if (err > 1.0){
-			steps = steps + 1;
-			err = err - 1.0;
-		}
-	}
-	else {
-		err = 0.0;
-	}
-	
-	for (size_t i = 0; i < steps; i++)
+	for (int i = 0; i < steps; i++)
 	{
-		moveMotor(speedVal);
+		stepMotor(speedVal);
 	}
-	return err;
 }
 
-void alignMotorWithIR() {
-	int threshold = 200;
-	int readIRalign = digitalRead(align_IR);
-	while (readIRalign < threshold)
+void fireFly(){
+
+}
+
+int alignMotorWithIR() {
+	int steps = 0;
+	while (spin_motor == 1)
 	{
-		stepMotor(1, 300, true, 0.0, false);
-		readIRalign = digitalRead(align_IR);
+		moveMotor(1, 600, true);
+		int val = analogRead(align_IR);
+		steps++;
+		delay(250);
 	}
+	digitalWrite(stepPin, LOW);
+	sendToMATLAB(aligned);
+	return steps;
+}
+
+void changeSpinState() {
+	spin_motor = 0;
+}
+
+void sendToMATLAB(String code){
+	Serial.println(code);
+}
+
+String readFromMATLAB(){
+	String read = Serial.readString();
+	return read;
 }
