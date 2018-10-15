@@ -1,7 +1,7 @@
 \documentclass[12pt]{article}
 
 \usepackage[top=0.7in, left=0.7in, right=0.7in, bottom=0.7in]{geometry}
-\usepackage{amsmath, amssymb, gensymb, mathtools}
+\usepackage{amsmath, amssymb, gensymb}
 \usepackage{graphicx}
 \usepackage[font=footnotesize, labelfont=bf]{caption}
 \usepackage{subcaption}
@@ -84,8 +84,86 @@
 
 For specific information regarding individual components, see the specification sheets in \texttt{SpecSheets/} folder in the same directory as this .pdf.
 
+\section{Software}
+The software required for the design of the project:
+\begin{itemize}
+	\item \href{https://www.autodesk.com/education/free-software/featured}{Autodesk Inventor Professional (2019 or onwards)}
+	\item \href{https://www.autodesk.com/education/free-software/featured}{EAGLE}
+	\item Adobe Illustrator (Vikas will know how to obtain this)
+\end{itemize}
+
+The software required for rapid prototyping of the design:
+\begin{itemize}
+	\item \href{www.3dprinteros.com}{3DPrinterOS} (or \href{https://ultimaker.com/en/products/ultimaker-cura-software}{CURA}, if local 3D printer)
+	\item \href{https://support.voltera.io/hc/en-us/articles/115002633033-EAGLE-Export-Guide}{Voltera V-1 CAM (Computer-Aided Manufacturing) plug-in} for EAGLE
+	\item \href{https://support.voltera.io/hc/en-us/articles/115002633033-EAGLE-Export-Guide}{Voltera design help plug-in} for EAGLE
+	\item \href{https://www.inventables.com/technologies/easel}{Easel} for Carvey CNC machine 
+\end{itemize}
+
+\section{Part Notes}
+
+\subsection{Stepper Motor Driver A4988}
+
+\begin{itemize}
+	\item Make sure that the header pins to the motor driver are properly soldered to the board. Will not work properly if contacts are insufficient.
+	\item The sense resistor (white) is 68 m$\Omega$. The maximum current of the linked motor is 1.2 A. As such, the appropriate voltage reference should be set to $8\cdot1.2~\mathrm{A}\cdot0.0068~\Omega = 0.653$ V. The voltage can be checked by touching the screw on the stepper motor driver, or on the little gold circular hole located below the chip.
+	\item Do NOT disconnect the motor from the stepper motor driver while it is fully powered. It will fry the chip. The motor will then cease to spin, and instead will only jitter back and forth, even when the code and connections are all correct.
+	\item The easiest way to turn everything off is to first disconnect the logic from the motor, and then disconnect the motor power source.
+	\item A large capacitor (at least 100 $\mu$F) should be used between the motor power (VMOT) and motor ground (GND) to maintain a stable power source and help to prevent any spikes in voltage.
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{c | c | c | c | c}
+			\textbf{MS1} 	& \textbf{MS2} & \textbf{MS3} & \textbf{Step Size} & \textbf{Steps/360\degree} \\ \cline{1-5}
+			LOW  & LOW  & LOW  & 1 & 200  \\
+			HIGH & LOW  & LOW  & $\sfrac{1}{2}$ & 400  \\
+			LOW  & HIGH & LOW  & $\sfrac{1}{4}$ & 800 \\
+			HIGH & HIGH & LOW  & $\sfrac{1}{8}$ & 1600 \\
+			HIGH & HIGH & HIGH & $\sfrac{1}{16}$ & 3200 \\
+		\end{tabular}
+		\caption{Changing stepper motor size}
+		\label{tbl:mspins}
+	\end{table}	
+\end{itemize}
+
+\subsection{Stepper Motor}
+\begin{itemize}
+	\item At 200 steps per rotation, with 8 flies, that is 25 steps to get to the next fly
+	\item The current limit of 1.2 A should not be exceeded
+	\item Black-Yellow-Green are all connected together in one solenoid. Since the stepper driver is coded to drive it as a bipolar motor, the yellow lead is unnecessary. As such, only black and green are connected to the stepper driver.
+	\item Red-White-Blue are all connected together in the other solenoid. Similarly as above, only the red and blue wires are connected to the stepper driver, and the white lead is unnecessary.
+	\item Motor must be firmly attached to plate minimize vibrations, as these vibrations can be quite loud	
+\end{itemize}
+
+\subsection{Arduino Mega}
+\begin{itemize}
+	\item Only some pins can function as digital interrupts. These pins are: 2, 3, 18, 19, 20, 21.
+	\item Each I/O pin should deliver no more than 40 mA of current. Any more risks damage to the board. The total I/O current should not exceed 200 mA.
+	\item The total current from the 5 V pin on the Arduino should not exceed 500 mA.
+\end{itemize}
+
+\subsection{IR Emitters/Sensors}
+
+\begin{itemize}
+	\item The emitters are labeled with a yellow dot, while the sensors with a red dot
+	\item The voltage measured by the Arduino or sent to the comparator should be measured after the 10 k$\Omega$ resistor but before the phototransistor (sensor)
+	\item A resistor to lower the voltage and current to the IR diode should be used to prevent frying the component. A 330 $\Omega$ resistor is sufficient.
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{c | c | c}
+			\textbf{State} 	& \textbf{Analog} & \textbf{Voltage} (V) \\ \cline{1-3}
+			Fully blocked 	& 800  & 3.91\\
+			Fly blocking	& 100  & 0.49\\
+			Unbroken 		& 30   & 0.15\\ 
+		\end{tabular}
+		\caption{Approximate values for the IR beams when powered with 5 V}
+		\label{tbl:irstates}
+	\end{table}
+\end{itemize}
+
+\section{Coding}
+This one might be a matter of preference, as the Arduino IDE itself is sufficient for programming. However, it does not come with a lot of features that useful for any coding experience such as custom syntax highlighting, auto-complete, debugging tools, variable tracking, etc. \href{https://www.visualmicro.com/}{Visual Micro} plug-in for Microsoft Visual Studio is by far the better choice, makes programming significantly more straightforward and streamlined.
+
 \section{Circuit Diagram}
 \includepdf[landscape=true]{./Diagrams/CircuitDiagram.pdf}
-
 
 \end{document}
