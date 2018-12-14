@@ -10,6 +10,6 @@ void loop() {
   // put your main code here, to run repeatedly:
   delay(5000);
   digitalWrite(relayPin, !digitalRead(relayPin));
-  delay(1000);
+  delay(5000);
   digitalWrite(relayPin, !digitalRead(relayPin));
 }
