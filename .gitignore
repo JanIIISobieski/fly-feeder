@@ -4,6 +4,7 @@
 *.asv
 OldVersions/
 AutomatedFlyFeeder/
+AutomatedFlyArena/
 
 # LaTeX files
 *.aux
