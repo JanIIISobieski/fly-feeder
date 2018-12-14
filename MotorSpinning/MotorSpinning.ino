@@ -1,28 +1,28 @@
-const int dirPin = 5;
-const int stepPin = 4;
-
-const int ledPin = 13;
+const int dirPin    = 12;
+const int stepPin   = 11;
 
 void setup() {
   // put your setup code here, to run once:
   pinMode(dirPin, OUTPUT);
   pinMode(stepPin, OUTPUT);
-  pinMode(ledPin, OUTPUT);
-
-  digitalWrite(dirPin, LOW);
+  digitalWrite(dirPin, HIGH);
   digitalWrite(stepPin, LOW);
 
-  digitalWrite(ledPin, HIGH);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  sendStep(600);
+  for (int i = 0; i < 64*200; i++) {
+    sendStep(10, 300);
+  }
+
+  delay(2000);
+  digitalWrite(dirPin, !digitalRead(dirPin));
 }
 
-void sendStep(int speedVal){
+void sendStep(int val1, int val2){
   digitalWrite(stepPin, HIGH);
-  delayMicroseconds(speedVal);
+  delayMicroseconds(val1);
   digitalWrite(stepPin, LOW);
-  delayMicroseconds(speedVal);
+  delayMicroseconds(val2);
 }
