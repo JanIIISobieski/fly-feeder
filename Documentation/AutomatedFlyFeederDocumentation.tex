@@ -27,6 +27,7 @@
 \usepackage{pdfpages}
 \usepackage[utf8]{inputenc}
 \usepackage{cite}
+\usepackage{microtype}
 \bibliographystyle{abbrv}
 
 \lhead{}
@@ -162,6 +163,18 @@ The software required for rapid prototyping of the design:
 
 \section{Coding}
 This one might be a matter of preference, as the Arduino IDE itself is sufficient for programming. However, it does not come with a lot of features that useful for any coding experience such as custom syntax highlighting, auto-complete, debugging tools, variable tracking, etc. \href{https://www.visualmicro.com/}{Visual Micro} plug-in for Microsoft Visual Studio is by far the better choice, makes programming significantly more straightforward and streamlined.
+
+\subsection{Serial communication codes}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{c l}
+		\texttt{'a'}  & alignment of cartridge complete\\
+		\texttt{'\%d'} & digit corresponding to fly tube\\
+		\texttt{'p'} & fly passed through the exit hole
+	\end{tabular}
+	\caption{Codes sent by Arduino to MATLAB to inform MATLAB of device status}
+	\label{tbl:arduino_codes}
+\end{table}
 
 \section{Circuit Diagram}
 \includepdf[landscape=true]{./Diagrams/CircuitDiagram.pdf}

@@ -1,22 +1,34 @@
 clc; clear; close all;
 
-s1 = serial('COM3');
-s1.BaudRate = 9600;
-s1.Terminator = 'LF';
 
-fopen(s1);
+slCharacterEncoding('US-ASCII')
+
+flyString = 'a';
+
+i = 1;
+arduino = serial('COM4');
+arduino.BaudRate = 9600;
+arduino.Terminator = 'CR/LF';
+
+
+fopen(arduino);
 
 try
-    i = 1;
-    while i < 100
-        %w = fscanf(s1, '%s');
-        w = fgetl(s1);
-        display(w(1:(end-1)))
-        i = i + 1;
+    while 1
+        if i == 1
+            w = fgetl(arduino);
+            display(w)
+            i = 2;
+        else
+            fprintf(arduino, '%c', 's');
+            i = 1;
+        end
+        
     end
+    
 catch exception
-    fclose(s1);
+    fclose(arduino);
     throw (exception);
 end
 
-fclose(s1);
+fclose(arduino);
