@@ -24,6 +24,8 @@ AutomatedFlyArena/
 *.suo
 __vm/
 Debug/
+*.vs/
+*.sln
 
 # Images
 *.png
