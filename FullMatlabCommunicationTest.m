@@ -14,6 +14,7 @@ global flyTrials
 global flyPassedSignal
 global startSignal
 global experimentEndSignal
+global completionSignal
 
 flyIndex = NaN;
 flyTrials = [0 0 0 0 0 0 0 0];
@@ -23,6 +24,7 @@ numTrials = 3;
 startSignal = 'b';
 flyPassedSignal = 'f';
 experimentEndSignal = 'e';
+completionSignal = 'c';
 
 fopen(arduino);
 pause(5);
@@ -64,24 +66,29 @@ try
             case 'trial'
                 fprintf('Running experiment\n');
                 pause(3);
-                flyTrials(flyIndex) = flyTrials(flyIndex) + 1;
+                flyTrials(flyIndex + 1) = flyTrials(flyIndex + 1) + 1;
                 disp(flyTrials)
+                action = 'fly removal';
                 
             case 'fly removal'
                 fprintf(arduino, '%c', experimentEndSignal);
                 if all(flyTrials >= numTrials)
                     action = 'end';
+                else
+                    action = 'start';
                 end
+                
             case 'end'
-                fprintf('Fin')
+                
+                fprintf('Experiment Complete\n')
                 break;
         end
     end
     
 catch exception
-    fclose(arduino);
-    throw (exception);
     
+    fclose(arduino);
+    throw(exception);
 end
 
 fclose(arduino);
