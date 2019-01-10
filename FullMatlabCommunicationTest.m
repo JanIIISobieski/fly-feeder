@@ -44,9 +44,9 @@ try
                 action = 'fly index';
             
             case 'fly index'                
-                recievedNum = fgetl(arduino);
+                recievedNum = getFromArduino(arduino);
                 
-                if ~isempty(recievedNum) && ~strcmp(recievedNum, flyPassedSignal)
+                if recievedNum ~= -1
                     if ~isnan(recievedNum) 
                         flyIndex = str2double(recievedNum);
                         action = 'fly pass';
@@ -54,7 +54,7 @@ try
                 end
                 
             case 'fly pass'
-                recievedChar = fgetl(arduino);
+                recievedChar = getFromArduino(arduino);
                 
                 if strcmp(recievedChar, flyPassedSignal)
                    action = 'trial';
