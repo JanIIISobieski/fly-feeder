@@ -3,8 +3,6 @@ clc; clear; close all;
 
 slCharacterEncoding('US-ASCII')
 
-flyString = 'a';
-
 i = 1;
 arduino = serial('COM4');
 arduino.BaudRate = 9600;

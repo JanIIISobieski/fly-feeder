@@ -18,8 +18,11 @@ const int numTubes = 8;
 
 volatile bool spinState = true;
 
-int flyIndex = 0;
+char recievedChar;
 
+char startSignal = 'b';
+
+int flyIndex = 0;
 
 enum DeviceCases
 {
@@ -49,39 +52,40 @@ void setup() {
 
 void loop() {
 	if(switchCase == listen) {
-		Serial.println("Listening");
-		delay(2500);
-		switchCase = align;
+		getFromMATLAB();
+		if (recievedChar == startSignal) {
+			switchCase = align;
+		}
 	}
+
 	else if (switchCase == align) {
-		Serial.println("Aligning");
 		float numSteps = alignCartridge();
 		flyIndex = (flyIndex + round(numSteps / expectedSteps)) % numTubes;
 		
 		if (numSteps < 100) {
-			switchCase = align;
+			switchCase = align; //Too few steps, keep going
 		}
 		else {
 			switchCase = fireFly;
 		}
 	}
+
 	else if (switchCase == fireFly) {
-		Serial.println("Firing");
 		delay(1000);
 		switchCase = verify;
 	}
+
 	else if (switchCase == verify) {
-		Serial.println("Verifying");
 		delay(1000);
 		switchCase = suckFly;
 	}
+
 	else if (switchCase == suckFly) {
-		Serial.println("Sucking");
 		delay(1000);
 		switchCase = listen;
 	}
+
 	else {
-		Serial.println("Whoops, what happened?");
 		delay(1000);
 	}
 }
@@ -107,4 +111,14 @@ float alignCartridge() {
 
 	spinState = true;
 	return steps;
+}
+
+void getFromMATLAB() {
+	if (Serial.available() > 0) {
+		recievedChar = Serial.read();
+	}
+}
+
+void sendToMATLAB(char message) {
+	Serial.println(message);
 }
