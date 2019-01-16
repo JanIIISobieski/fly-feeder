@@ -66,7 +66,7 @@ try
             case 'trial'
                 fprintf('Running experiment\n');
                 pause(3);
-                flyTrials(flyIndex + 1) = flyTrials(flyIndex + 1) + 1;
+                flyTrials(flyIndex + 1) = flyTrials(flyIndex + 1) + 1; %Matlab indexing starts at 1, not 0 like C++
                 disp(flyTrials)
                 action = 'fly removal';
                 
