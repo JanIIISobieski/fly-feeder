@@ -64,20 +64,22 @@
 \renewcommand{\arraystretch}{1.2}
 \begin{table}[H]
 	\centering
-	\begin{tabular}{| r | c |} \toprule
+	\begin{tabular}{ r | l }
 		\textbf{Item}  & \textbf{Amount} \\ \cline{1-2}
 		\href{https://store.arduino.cc/usa/arduino-mega-2560-rev3}{Arduino Mega}   &  1\\
-		\href{https://www.sparkfun.com/products/9806}{10K Trimpot}    &  1\\
-		\href{https://www.sparkfun.com/products/241}{IR Emitter}     &  9\\
+		\href{https://www.sparkfun.com/products/9806}{10K Trimpot}    &  2\\
+		\href{https://www.sparkfun.com/products/241}{IR Emitter}     &  2\\
 		\href{https://www.sparkfun.com/products/241}{IR Sensor}      &  2\\
 		\href{https://www.sparkfun.com/products/8982}{1 mF Capacitor} &  1\\
-		\href{https://www.sparkfun.com/products/14490}{330 $\Omega$ Resistor} &  9\\ 
+		\href{https://www.sparkfun.com/products/14490}{330 $\Omega$ Resistor} &  2\\ 
 		\href{https://www.sparkfun.com/products/14491}{10 k$\Omega$ Resistor} &  2\\
-		\href{https://www.sparkfun.com/products/10811}{Barrel adapter} &  1\\
-		\href{https://www.pololu.com/product/2128}{A4988 Stepped Motor Driver} &  1\\
-		\href{https://www.pololu.com/product/1200}{Stepper Motor 1.2 A, 200 steps} & 1\\
-		\href{https://www.sparkfun.com/products/9456}{LM358N Op-Amp} & 1\\
-		\href{https://www.sparkfun.com/products/13815}{10 Amp Relay}  & 2\\ \bottomrule
+		\href{https://www.pololu.com/product/1200}{Stepper Motor} & 1\\
+		\href{https://www.sparkfun.com/products/9456}{LM358N Op-Amp} & 2\\
+		\href{https://www.pololu.com/product/2858}{5V Regulator} & 1\\
+		\href{https://www.pololu.com/product/2855}{12V Regulator} & 1\\
+		\href{https://www.actuonix.com/L12-I-Micro-Linear-Actuator-Internal-Controller-p/l12-i.htm}{Linear Actuator} & 2\\
+		\href{https://www.circuitspecialists.com/cw230.html}{Stepper Motor Driver} & 1\\
+		\href{https://www.pololu.com/product/2485}{5V Relay}  & 2\\ \bottomrule
 	\end{tabular}
 	\caption{Necessary equipment and respective links to the product}
 	\label{tbl:equipment}
@@ -88,9 +90,9 @@ For specific information regarding individual components, see the specification 
 \section{Software}
 The software required for the design of the project:
 \begin{itemize}
-	\item \href{https://www.autodesk.com/education/free-software/featured}{Autodesk Inventor Professional (2019 or onwards)}
-	\item \href{https://www.autodesk.com/education/free-software/featured}{EAGLE}
-	\item Adobe Illustrator (Vikas will know how to obtain this)
+	\item \href{https://www.autodesk.com/education/free-software/featured}{Autodesk Inventor Professional (2019 or onwards)} for the mechanical design
+	\item \href{https://www.autodesk.com/education/free-software/featured}{EAGLE} for the design of the printed circuit boards (PCBs)
+	\item Adobe Illustrator (Vikas will know how to obtain this) for opening and editing .DXF files exported from Inventor to ensure the PCBs will be of the right shape
 \end{itemize}
 
 The software required for rapid prototyping of the design:
@@ -98,33 +100,11 @@ The software required for rapid prototyping of the design:
 	\item \href{www.3dprinteros.com}{3DPrinterOS} (or \href{https://ultimaker.com/en/products/ultimaker-cura-software}{CURA}, if local 3D printer)
 	\item \href{https://support.voltera.io/hc/en-us/articles/115002633033-EAGLE-Export-Guide}{Voltera V-1 CAM (Computer-Aided Manufacturing) plug-in} for EAGLE
 	\item \href{https://support.voltera.io/hc/en-us/articles/115002633033-EAGLE-Export-Guide}{Voltera design help plug-in} for EAGLE
-	\item \href{https://www.inventables.com/technologies/easel}{Easel} for Carvey CNC machine 
+	\item \href{https://www.inventables.com/technologies/easel}{Easel} for Carvey CNC machine in case small parts need to be machined
+	\item \href{https://oshpark.com/}{OSHPark} for manufacturing of PCBs -- this might be easier and faster than using a Voltera-V1, EAGLE has a CAM processor\footnote{A CAM Processor converts the board file into actual code for machines for their manufacture -- how to drill, where to place solder, pads, leads, vias, etc.} for exporting a .zip file specifically for OSHPark
 \end{itemize}
 
 \section{Part Notes}
-
-\subsection{Stepper Motor Driver A4988}
-
-\begin{itemize}
-	\item Make sure that the header pins to the motor driver are properly soldered to the board. Will not work properly if contacts are insufficient.
-	\item The sense resistor (white) is 68 m$\Omega$. The maximum current of the linked motor is 1.2 A. As such, the appropriate voltage reference should be set to $8\cdot1.2~\mathrm{A}\cdot0.0068~\Omega = 0.653$ V. The voltage can be checked by touching the screw on the stepper motor driver, or on the little gold circular hole located below the chip.
-	\item Do NOT disconnect the motor from the stepper motor driver while it is fully powered. It will fry the chip. The motor will then cease to spin, and instead will only jitter back and forth, even when the code and connections are all correct.
-	\item The easiest way to turn everything off is to first disconnect the logic from the motor, and then disconnect the motor power source.
-	\item A large capacitor (at least 100 $\mu$F) should be used between the motor power (VMOT) and motor ground (GND) to maintain a stable power source and help to prevent any spikes in voltage.
-	\begin{table}[H]
-		\centering
-		\begin{tabular}{c | c | c | c | c}
-			\textbf{MS1} 	& \textbf{MS2} & \textbf{MS3} & \textbf{Step Size} & \textbf{Steps/360\degree} \\ \cline{1-5}
-			LOW  & LOW  & LOW  & 1 & 200  \\
-			HIGH & LOW  & LOW  & $\sfrac{1}{2}$ & 400  \\
-			LOW  & HIGH & LOW  & $\sfrac{1}{4}$ & 800 \\
-			HIGH & HIGH & LOW  & $\sfrac{1}{8}$ & 1600 \\
-			HIGH & HIGH & HIGH & $\sfrac{1}{16}$ & 3200 \\
-		\end{tabular}
-		\caption{Changing stepper motor size}
-		\label{tbl:mspins}
-	\end{table}	
-\end{itemize}
 
 \subsection{Stepper Motor}
 \begin{itemize}
@@ -168,12 +148,46 @@ This one might be a matter of preference, as the Arduino IDE itself is sufficien
 \begin{table}[H]
 	\centering
 	\begin{tabular}{c l}
-		\texttt{'a'}  & alignment of cartridge complete\\
+		\texttt{'b'}  & begin experiment\\
+	    \texttt{'f'}  & fly passed signal\\
+		\texttt{'e'}  & end of experimental trial\\
+		\texttt{'c'}  & completion of all trials\\				
 		\texttt{'\%d'} & digit corresponding to fly tube\\
-		\texttt{'p'} & fly passed through the exit hole
 	\end{tabular}
-	\caption{Codes sent by Arduino to MATLAB to inform MATLAB of device status}
+	\caption{Codes sent by Arduino and MATLAB over serial to inform device status}
 	\label{tbl:arduino_codes}
+\end{table}
+
+\subsection{Wire connections to Arduino}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{c c}
+		\multicolumn{2}{c}{\textbf{Align fly cartridge}}\\ \midrule
+		POT pin on aligner PCB & A0 \\
+		RAW pin on aligner PCB & A1 \\
+		DIG pin on aligner PCB & 3$^*$ \\ \midrule
+		\multicolumn{2}{c}{\textbf{Fly passing}}\\ \midrule
+		POT pin for fly passing & A6 \\
+		RAW pin for fly passing & A7 \\
+		DIG pin for fly passing PCB & 2$^*$ \\ \midrule
+		\multicolumn{2}{c}{\textbf{Stepper motor}}\\ \midrule
+		STEP pin (CP+) & 12 \\
+		DIR pin (CW+) & 13 \\ \midrule
+		\multicolumn{2}{c}{\textbf{Linear actuator}}\\ \midrule
+		Motor 1 Feedback & A3 \\
+		Motor 2 Feedback & A4 \\
+		Motor 3 Feedback (Optional) & A5 \\
+		Motor 1 Setter & 4 \\
+		Motor 2 Setter & 5\\		
+		Motor 3 Setter (Optional) & 6\\ \midrule
+		\multicolumn{2}{c}{\textbf{Solenoids}}\\ \midrule
+		Solenoid A & 7 \\
+		Solenoid B & 8 \\
+		Solenoid C (Optional) & 9 \\
+		Solenoid D (Optional) & 10\\
+	\end{tabular}
+	\caption{The pin assignments for the device. $^*$ refers to the fact the pin is used for its interrupt capabilities}
 \end{table}
 
 \section{Circuit Diagram}
