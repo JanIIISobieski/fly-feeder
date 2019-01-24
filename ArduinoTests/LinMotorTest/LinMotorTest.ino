@@ -9,7 +9,7 @@ void setup() {
 }
 
 void loop() {
-  int setting = random(0, 255);
+  int setting = random(5, 245);
   analogWrite(linMotorSetter, setting);
   int readValue = analogRead(linMotorFeedback);
   Serial.print(setting);

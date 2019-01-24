@@ -1,33 +1,28 @@
-const int dirPin = 7;
-const int stepPin = 6;
-const int opAmpPin = 3;
-const int ledPin = 13;
+const int dirPin = 13;
+const int stepPin = 12;
+const int opAmpPin = 3;;
 
 volatile bool spinMotorFlag = true;
 
 void setup() {
   pinMode(dirPin, OUTPUT);
   pinMode(stepPin, OUTPUT);
-  pinMode(ledPin, OUTPUT);
 
   pinMode(opAmpPin, INPUT);
 
   digitalWrite(dirPin, LOW);
   digitalWrite(stepPin, LOW);
 
-  digitalWrite(ledPin, HIGH);
-  
   attachInterrupt(digitalPinToInterrupt(opAmpPin), toggleMotor, RISING);
 }
 
 void loop() {
   if (spinMotorFlag) {
-    sendStep(600);
+    sendStep(1000);
   }
   else{
     delay(5000);
     spinMotorFlag = true;
-    digitalWrite(ledPin, HIGH);
   }
 }
 
@@ -40,6 +35,5 @@ void sendStep(int speedVal){
 
 void toggleMotor(){
   digitalWrite(stepPin, LOW);
-  digitalWrite(ledPin, LOW);
   spinMotorFlag = false;
 }
