@@ -2,8 +2,8 @@ clc; clear; close all;
 
 slCharacterEncoding('US-ASCII')
 
-%arduino = serial('COM4'); %on windows machine
-arduino = serial('/dev/ttyACM0');
+%arduino = serial('COM4'); %on windows machine, COM(digit)
+arduino = serial('/dev/ttyACM0'); %on ubuntu system, ttyACM(digit)
 arduino.BaudRate = 9600;
 arduino.Terminator = 'CR/LF';
 
