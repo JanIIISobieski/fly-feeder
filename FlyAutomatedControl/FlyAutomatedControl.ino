@@ -19,7 +19,7 @@ int switchCase = listen; //first case, needs MATLAB input
 
 // Needed for the rotation
 int flyIndex = -1;
-float expectedSteps = 1600.0; //200 steps / rot * 64 microstepping / 8 tubes
+float expectedSteps = 1600.0; //200 steps per rotation * 64 microstepping / 8 tubes
 const int numTubes = 8;
 
 // Communications
@@ -74,6 +74,20 @@ float alignCartridge() {
 
   spinState = true;
   return steps;
+}
+
+void moveMotor(int numSteps, bool dir){
+  if (!dir){
+    digitalWrite(dirPin, !digitalRead(dirPin));
+  }
+  
+  for(int i = 1; i <= numSteps; i++){
+    sendStep(10, 300); 
+  }
+  
+  if (!dir){
+    digitalWrite(dirPin, !digitalRead(dirPin));
+  }
 }
 
 void stopSpin() {
@@ -151,10 +165,12 @@ void loop() {
     float numSteps = alignCartridge();
     flyIndex = (flyIndex + round(numSteps / expectedSteps)) % numTubes;
     
-    if (numSteps < 100) {
+    if (numSteps < 400) {
       switchCase = align; //Too few steps, keep going
     }
     else {
+      delay(500);
+      moveMotor(300, false); //move motor back to correct position
       Serial.println(itoa(flyIndex, buf, 10)); //integer to ascii character (itoa) needed for proper sending
       switchCase = open2Fire;
     }
@@ -175,6 +191,7 @@ void loop() {
     delay(25);
     
     getFromMATLAB();
+    
     if (recievedChar == flyPassedSignal) {
       recievedChar = '\0';
       matlabFirst = true;
