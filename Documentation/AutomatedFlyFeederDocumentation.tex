@@ -141,6 +141,16 @@ The software required for rapid prototyping of the design:
 	\end{table}
 \end{itemize}
 
+\subsection{Actuonix Linear Actuator}
+\begin{itemize}
+	\item Blue wire -- voltage input signal (0 to 5 V)
+	\item Purple wire -- feedback signal (0 to 3.3 V)
+	\item Red wire -- power (12 V)
+	\item Black wire -- ground
+	\item The position signal should be between 0.1 V to 4.9 V to avoid the motor stalling at either max extension or max retraction, which can damage the motor
+	\item The position signal is sent as a pulse width modulated wave: i.e. the voltage is proportional to the duty cycle of a square wave.
+\end{itemize}
+
 \section{Coding}
 This one might be a matter of preference, as the Arduino IDE itself is sufficient for programming. However, it does not come with a lot of features that useful for any coding experience such as custom syntax highlighting, auto-complete, debugging tools, variable tracking, etc. \href{https://www.visualmicro.com/}{Visual Micro} plug-in for Microsoft Visual Studio is by far the better choice, makes programming significantly more straightforward and streamlined.
 
