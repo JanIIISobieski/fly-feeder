@@ -97,13 +97,15 @@ void triggerSucker(){
 
 // Linear Actuator
 void openGates(){
-  analogWrite(linMotSet1, 245);
-  analogWrite(linMotSet2, 245);  
+  analogWrite(linMotSet1, 77);
+  analogWrite(linMotSet2, 77);  
+  delay(4000);
 }
 
 void closeGates(){
-  analogWrite(linMotSet1, 5);
-  analogWrite(linMotSet2, 5);
+  analogWrite(linMotSet1, 20);
+  analogWrite(linMotSet2, 20);
+  delay(4000);
 }
 
 
@@ -111,17 +113,27 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(pushSol, OUTPUT);
   pinMode(suckSol, OUTPUT); 
-
+  pinMode(linMotSet1, OUTPUT);
+  pinMode(linMotSet2, OUTPUT);
+  
   digitalWrite(pushSol, LOW);
-  digitalWrite(suckSol, LOW);  
+  digitalWrite(suckSol, LOW);
+
+   delay(5000);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  triggerAirPush();
-  delay(5000);
-  triggerAirPush();
+  //openGates();
+  //triggerAirPush();
+  //delay(5000);
+  //triggerAirPush();
+  //closeGates();
+  //delay(5000);
+  openGates();
   triggerSucker();
   delay(5000);
   triggerSucker();
+  closeGates();
+  delay(5000);
 }
