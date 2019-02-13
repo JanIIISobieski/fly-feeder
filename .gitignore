@@ -2,6 +2,7 @@
 *.ipt
 *.lck
 *.asv
+*.iam
 OldVersions/
 AutomatedFlyFeeder/
 AutomatedFlyArena/
