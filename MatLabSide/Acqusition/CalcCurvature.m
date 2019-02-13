@@ -3,10 +3,10 @@ function [curvature,theta] = CalcCurvature(s)
 
 x = s.Center.x;%.*sArena.cF;
 y = s.Center.y;%.*sArena.cF;
-[m, n]=size(x);
+[m, n] = size(x);
 
 % calculating curvature
-if n>m
+if n > m
     Vertices = horzcat(x',y');
 else
     Vertices = horzcat(x,y);
@@ -14,18 +14,18 @@ end
 
 
 %get normal vectors
-N=LineNormals2D(Vertices);
+N = LineNormals2D(Vertices);
 
 theta = zeros(1,length(x)-1); %make it zero vector
 for p=1:(length(x)-1)
     %because normal is a unit vector. The x-component can be used
     % to determine the angle it makes with x-axis.
-    theta(p)=acos(N(p,1));
+    theta(p) = acos(N(p, 1));
     % the if loop converts from 0 to pi to -pi to pi
     if N(p,1)>0 && N(p,2)<0
-        theta(p)=-theta(p);
+        theta(p) = -theta(p);
     elseif N(p,1)<0 && N(p,2)<0
-        theta(p)=-theta(p);
+        theta(p) = -theta(p);
     end
 end
 
@@ -41,8 +41,8 @@ curvature = [curvature 0];
 %     end
 % end
 %         
-curvature(curvature>pi) = curvature(curvature>pi)-2.*pi;
-curvature(curvature<-pi) = curvature(curvature<-pi)+2.*pi;
+curvature(curvature > pi) = curvature(curvature > pi) - 2.*pi;
+curvature(curvature < -pi) = curvature(curvature < -pi) + 2.*pi;
 
 
 end

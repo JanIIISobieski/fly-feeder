@@ -1,7 +1,7 @@
-function [s,sAnalysis,sArena] = FlyVideoAnalysis2(folder,nClip)%,sArena)
+function [s,sAnalysis, sArena] = FlyVideoAnalysis2(folder, nClip)%,sArena)
 close all
-load([folder,nClip(1:end-4),'Data'])
-v = VideoReader([folder,nClip,'.avi']);
+load([folder, nClip(1:end-4), 'Data'])
+v = VideoReader([folder, nClip, '.avi']);
 f = v.FrameRate;
 len = v.NumberofFrames;
 
@@ -18,21 +18,21 @@ Kinematics = struct('thrust',[],'slip',[],'yaw',[]);
 Distances = struct('DistanceR',[],'xDist',[],'yDist',[]);
 
 s = struct('Kinematics',Kinematics,...
-    'Distances',Distances,...
-    'MjrAxs',zeros(1,len),...
-    'MinAxs',zeros(1,len),...
-    'AngVec',zeros(1,len),...
-    'Center',struct('x',zeros(1,len),'y',zeros(1,len)),...
-    'Head',struct('x',zeros(1,len),'y',zeros(1,len)),...
-    'Flags',struct('ratio',flag,'size',flag,'thrust',flag2,'slip',flag3),...
-    'Status','good',...
-    'LightOn',[]);
+           'Distances',Distances,...
+           'MjrAxs',zeros(1,len),...
+           'MinAxs',zeros(1,len),...
+           'AngVec',zeros(1,len),...
+           'Center',struct('x',zeros(1,len),'y',zeros(1,len)),...
+           'Head',struct('x',zeros(1,len),'y',zeros(1,len)),...
+           'Flags',struct('ratio',flag,'size',flag,'thrust',flag2,'slip',flag3),...
+           'Status','good',...
+           'LightOn', []);
 
 sAnalysis = struct('NumPixels',zeros(1,len),...
-    'MaxIntensity',zeros(1,len),...
-    'MedIntensity',zeros(1,len),...
-    'SNRClamp',zeros(1,len),...
-    'SNR',zeros(1,len));
+                   'MaxIntensity',zeros(1,len),...
+                   'MedIntensity',zeros(1,len),...
+                   'SNRClamp',zeros(1,len),...
+                   'SNR',zeros(1,len));
     
 
 s.LightOn = LEDon;
@@ -40,12 +40,12 @@ s.LightOn = LEDon;
 if len~=length(LEDon)
     s.status = 'bad';
 end
-s.time=0:1/f:(len-1)/f;
+s.time = 0:1/f:(len-1)/f;
 circleImage = sArena.Mask.Inside;
-circleImage2 = ~sArena.bkgMask;
+circleImage2 = not(sArena.bkgMask);
 
-arenaCent=sArena.arenaCent;
-rad=sArena.rad;
+arenaCent = sArena.arenaCent;
+rad = sArena.rad;
 cF = sArena.cF;
 
 badFrames = false(1,10800);
@@ -55,7 +55,6 @@ redo = 0;
 
 
 while i <= len
-
     if redo > 0
         i = i-1;
         minPx = minPx-5;
@@ -65,20 +64,20 @@ while i <= len
         maxPx = 300;
     end
         bA = vision.BlobAnalysis('AreaOutputPort',1,...
-                        'BoundingBoxOutputPort',0,...
-                        'OrientationOutputPort',1,...
-                        'MaximumCount',1000,...
-                        'MinimumBlobArea',minPx,...
-                        'MaximumBlobArea',maxPx,...
-                        'ExcludeBorderBlobs',1,...
-                        'MinorAxisLengthOutputPort',1,...
-                        'MajorAxisLengthOutputPort',1);
+                                 'BoundingBoxOutputPort',0,...
+                                 'OrientationOutputPort',1,...
+                                 'MaximumCount',1000,...
+                                 'MinimumBlobArea',minPx,...
+                                 'MaximumBlobArea',maxPx,...
+                                 'ExcludeBorderBlobs',1,...
+                                 'MinorAxisLengthOutputPort',1,...
+                                 'MajorAxisLengthOutputPort',1);
     
     %read in frames one by one
     img = v.read(i);
     
     %change image to 2D
-    img2 = floor(mean(img,3));imgtemp = img2;
+    img2 = floor(mean(img,3)); imgtemp = img2;
     
 %     if i==start
 %         centroid = Mask_by_center(img2,circleImage,circleImage2,[],max(max(img2))./2);
@@ -91,11 +90,7 @@ while i <= len
 %             centroid = Mask_by_center(img2,circleImage,circleImage2,[],max(max(img2))./2);
 %         end
 %     end
-    
-   
-   
-    
-    
+     
      %binarize image
     if redo > 0 
         img3 = imbinarize(img2,6-redo*1);
@@ -104,17 +99,17 @@ while i <= len
     end
     
     % mask out anything is is outside of the arena
-    img3(~circleImage) = 0;
+    img3(not(circleImage)) = 0;
     
     % increase threshold to remove salt and pepper noise
     kk = 1;
-    while sum(sum(img3-medfilt2(img3)))>200 && max(max(img2))>8
+    while sum(sum(img3-medfilt2(img3))) > 200 && max(max(img2)) > 8
         img3 = imbinarize(img2,6+kk);
         kk = kk+1;
     end
     img2 = img3;
     
-    [area,centroid,mjrAx,minAx,ort] = step(bA,img2);
+    [area, centroid, mjrAx, minAx, ort] = step(bA,img2);
     
    
     if exist('area')
@@ -163,7 +158,7 @@ while i <= len
                     (s.Center.y(i) - s.Center.y(i-1))^2))>100 
                 img3(:,:) = 0;
                 img3(img2) = 1;
-                img3 = imfill(img3,'holes');
+                img3 = imfill(img3, 'holes');
                 
                 [area,centroid,mjrAx,minAx,ort] = step(bA,img2);
                 
@@ -261,15 +256,15 @@ while i <= len
             %img3 = insertText(img3,[1 50],i,'AnchorPoint','LeftBottom');
             imagesc(img3)
             hold on
-            plot(centroid(1),centroid(2), 'b*')
+            plot(centroid(1), centroid(2), 'b*')
             if s.LightOn(i)
-                plot(arenaCent(2), arenaCent(1),'ro','MarkerSize',70);
+                plot(arenaCent(2), arenaCent(1), 'ro', 'MarkerSize', 70);
             end
             ellipsev2(rad, rad, 0, arenaCent(1), arenaCent(2),'r');
-            ellipsev2(mjrAL, minAL, (ang(i))*pi/180, centroid(1), centroid(2),'r');
-            plot([xMajor1,xMajor2], [yMajor1,yMajor2],'g')
-            plot([xMinor1,xMinor2], [yMinor1,yMinor2],'g')
-            plot(s.Head.x(i),s.Head.y(i),'bl.','MarkerSize',30)
+            ellipsev2(mjrAL, minAL, (ang(i))*pi/180, centroid(1), centroid(2), 'r');
+            plot([xMajor1, xMajor2], [yMajor1, yMajor2],'g')
+            plot([xMinor1, xMinor2], [yMinor1, yMinor2],'g')
+            plot(s.Head.x(i), s.Head.y(i), 'bl.', 'MarkerSize', 30)
             hold off
             title(num2str(i))
         end
@@ -278,10 +273,10 @@ while i <= len
             i
         end
     end
-    i = i+1;
+    i = i + 1;
 end
- s.AngVec = unwrap(angVec)-360;
-[s] = postHocAnalysis(badFrames,s,sArena,len);
+ s.AngVec = unwrap(angVec) - 360;
+[s] = postHocAnalysis(badFrames, s, sArena, len);
 end
     
     

@@ -32,13 +32,13 @@ if nVarargs>0 && nVarargs<3
     type = [varargin{~num},[]];
 end
 
-a=zeros(1,length(y));
-[~,tmp1] = find(x>0);
-[~,tmp2] = find(x==0);
-[~,tmp3] = find(x<0);
-[~,tmp4] = find(y>=0);
-[~,tmp5] = find(y>0);
-[~,tmp6] = find(y<0);
+a = zeros(1,length(y));
+[~,tmp1] = find(x > 0);
+[~,tmp2] = find(x == 0);
+[~,tmp3] = find(x < 0);
+[~,tmp4] = find(y >= 0);
+[~,tmp5] = find(y > 0);
+[~,tmp6] = find(y < 0);
 
 case1 = tmp1;
 case2 = tmp3(ismember(tmp3,tmp4));
@@ -46,11 +46,11 @@ case3 = tmp3(ismember(tmp3,tmp6));
 case4 = tmp2(ismember(tmp2,tmp5));
 case5 = tmp2(ismember(tmp2,tmp6));
 
-a(case1)=atan(y(case1)./x(case1));
-a(case2)=pi+atan(y(case2)./x(case2));
-a(case3)=-pi+atan(y(case3)./x(case3));
-a(case4)=pi/2;
-a(case5)=-pi/2;
+a(case1) = atan(y(case1)./x(case1));
+a(case2) = pi + atan(y(case2)./x(case2));
+a(case3)= -pi + atan(y(case3)./x(case3));
+a(case4)= pi/2;
+a(case5)= -pi/2;
 
 if isequal(options,2)
     a(a<0) = a(a<0)+2*pi;

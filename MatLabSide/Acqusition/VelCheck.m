@@ -1,8 +1,10 @@
-function [angVecCor] = VelCheck(speed,thrustV,angVec,critPoints,all)
+function [angVecCor] = VelCheck(speed, thrustV, angVec, critPoints, all)
+
 angVecCor = angVec;
 
-%between these critical points, check to see that the general trend of
-%velocity and speed matches
+% between these critical points, check to see that the general trend of
+% velocity and speed matches
+
 for j = 1:length(critPoints)-1
     case1 = length(find(thrustV(critPoints(j)+1:critPoints(j+1))>0))>...
         length(find(thrustV(critPoints(j)+1:critPoints(j+1))<0));
