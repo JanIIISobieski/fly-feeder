@@ -1,4 +1,4 @@
-function N=LineNormals2D(Vertices, Lines)
+function N = LineNormals2D(Vertices, Lines)
 % This function calculates the normals, of the line points
 % using the neighbouring points of each contour point, and 
 % forward an backward differences on the end points

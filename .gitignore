@@ -3,6 +3,7 @@
 *.lck
 *.asv
 *.iam
+*.ipn
 OldVersions/
 AutomatedFlyFeeder/
 AutomatedFlyArena/

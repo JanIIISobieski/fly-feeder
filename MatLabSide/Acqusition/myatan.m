@@ -21,13 +21,13 @@ function a = myatan(x,y,varargin)
 if nargin < 2
     error('Must have at least 2 inputs (x,y)')
 end
-if nargin==2                                                                %just in case the user doesn't give options
+if nargin==2  % just in case the user doesn't give options
     type = 'radians';
     options = 1;
 end
 nVarargs = length(varargin);
 if nVarargs>0 && nVarargs<3
-    num = cellfun(@(x) isnumeric(x) && numel(x)==1, varargin);              % true for elements of C that are numerical scalars
+    num = cellfun(@(x) isnumeric(x) && numel(x)==1, varargin);  % true for elements of C that are numerical scalars
     options = [varargin{num},[]];
     type = [varargin{~num},[]];
 end

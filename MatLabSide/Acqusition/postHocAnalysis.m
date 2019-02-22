@@ -221,7 +221,7 @@ mvmtAngle(mvmtAngle < -180) = mvmtAngle(mvmtAngle < -180) + 360;
 
 yaw = diff(angVecCor);
 yaw(yaw > 180) = yaw(yaw > 180) - 360;
-yaw(yaw<-180) = yaw(yaw < -180) + 360;
+yaw(yaw < -180) = yaw(yaw < -180) + 360;
 thrustV = dspmt.*cosd(unwrap(mvmtAngle))*f;
 thrustV(abs(thrustV) > 70) = NaN;
 slipV = dspmt.*sind(mvmtAngle)*f;

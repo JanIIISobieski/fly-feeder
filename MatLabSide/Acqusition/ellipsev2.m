@@ -1,4 +1,4 @@
-function h=ellipsev2(ra,rb,ang,x0,y0,C,Nb)
+function h = ellipsev2(ra, rb, ang, x0, y0, C, Nb)
 % Ellipse adds ellipses to the current plot
 %
 % ELLIPSE(ra,rb,ang,x0,y0) adds an ellipse with semimajor axis of ra,
@@ -88,7 +88,7 @@ rb=rb(:);
 ang=ang(:);
 Nb=Nb(:);
 
-if isstr(C),C = C(:); end
+if isstr(C), C = C(:); end
 
 if length(ra)~=length(rb)
   error('length(ra)~=length(rb)');
