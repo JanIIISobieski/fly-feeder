@@ -32,6 +32,10 @@ vid.FramesAcquiredFcn = {'getFrameTime'};
 frame_time = zeros(vid.FramesPerTrigger, 6);
 frame_num = 1;
 
+bkg = get_background(vid, 10);
+
+pause;
+
 start(vid);
 trigger(vid);
 
@@ -45,3 +49,17 @@ trigger(vid);
 % end
 % fprintf('Finished writing to Disk\n')
 
+datetime_vec = datetime(frame_time);
+final_time = milliseconds(datetime_vec - datetime_vec(1));
+
+function bkg = get_background(vid, num_frames)
+    ROI = vid.ROIPosition;
+    bkg_stack = zeros(ROI(4), ROI(3), num_frames);
+    
+    for i = 1:num_frames
+       frame = getsnapshot(vid);
+       bkg_stack(:, :, i) = frame;
+    end
+    
+    bkg = mean(bkg_stack, 3);
+end
