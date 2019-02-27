@@ -34,3 +34,8 @@ Debug/
 
 # PCB Design Files
 PCBDesigns/*
+
+# Movies
+*.avi
+*.mj2
+*.mp4
